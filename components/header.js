@@ -7,6 +7,7 @@ import MegaNav from "./meganav/"
 const Header = () => {
     return (
         <header id="header">
+            <a href="#main" className="skip-link">Skip to main content</a>
             <div id="header-nav">
                 <div id="header-logo">
                     <a href="/" className="header-main-item">

@@ -83,3 +83,18 @@
         margin-left: 0px;
     }
 }
+
+.skip-link {
+    background: #fff;
+    left: 0;
+    line-height: 1;
+    position: fixed;
+    padding: 0.5rem;
+    top: -4rem;
+    z-index: 999999;
+
+    &:focus {
+        left: 0.5rem;
+        top: 0.5rem;
+    }
+}
