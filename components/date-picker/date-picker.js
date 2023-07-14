@@ -30,10 +30,37 @@ const DatePicker = ({numMonthsAheadToStart = 2}) => {
     let dayData = [...prevMonthDays, ...activeMonthDays, ...nextMonthDays]
     let [unavailableDates, setUnavailableDates] = useState(initUnavailableDates)
     let [selectedDates, setSelectedDates] = useState([])
-    
+
     const datesArray = dayData.map((day) => {
         return day.date
     })
+    const firstFocusedItemDate = datesArray[0]
+    const [focusedDate, setFocusedDate] = useState(firstFocusedItemDate)
+    const buttonRefs = useRef([])
+    const handleKeyDown = (event) => {
+        // prevent page scrolling with arrow keys when focused in the datepicker
+        if (event.key == 'ArrowUp' || event.key == 'ArrowDown') {
+            event.preventDefault();
+        }
+    }
+    const handleKeyUp = (event) => {
+        let date = event.target.dataset.date
+        let dateIndex = datesArray.indexOf(date)
+        let newDateIndex;
+        if (event.key === 'ArrowRight') {
+            newDateIndex = dateIndex + 1;
+        } else if (event.key === 'ArrowLeft') {
+            newDateIndex = dateIndex - 1;
+        } else if (event.key === 'ArrowDown') {
+            newDateIndex = dateIndex + 7;
+        } else if (event.key === 'ArrowUp') {
+            newDateIndex = dateIndex - 7;
+        }
+        focusDayByIndex(newDateIndex);
+    }
+    const focusDayByIndex = (index) => {
+        buttonRefs.current[index]?.focus()
+    }
     const setPrevMonth = () => {
         // only go backward as far as current month
         if (isPrevMonthAvailable()) {
@@ -87,7 +114,7 @@ const DatePicker = ({numMonthsAheadToStart = 2}) => {
     const confirmDialogRef = useRef(null)
     const dialogHeadingRef = useRef(null)
     let [dialogActive, setDialogActive] = useState(false)
-    
+
     const showConfirmModal = () => {
         console.log('show modal')
         setDialogActive(true)
@@ -177,7 +204,7 @@ const DatePicker = ({numMonthsAheadToStart = 2}) => {
                                             `${dayjs(day.date).format('MMMM D')}${day.isBooked ? ' already booked' : '' }${isDaySelected(day) ? ' selected' : ''}`
                                         }
                                         aria-selected={
-                                            isDaySelected(day) ? 'true' : 'false' 
+                                            isDaySelected(day) ? 'true' : 'false'
                                         }
                                         className={[
                                             'grid-btn',
@@ -185,7 +212,12 @@ const DatePicker = ({numMonthsAheadToStart = 2}) => {
                                             day.isCurrentMonth ? 'currentMonth' : '',
                                             isDaySelected(day) ? 'selected' : ''
                                         ].join(' ').trim()}
+                                        data-date={day.date}
                                         onClick={() => selectDay(day)}
+                                        onKeyDown={(event) => handleKeyDown(event)}
+                                        onKeyUp={(event) => handleKeyUp(event)}
+                                        ref={elementRef => {buttonRefs.current.push(elementRef)}}
+                                        tabIndex={focusedDate === day.date ? '0' : '-1'}
                                     >
                                         <time date-time={day.date}>{day.dayOfMonth}</time>
                                         <span className="icon" aria-hidden="true"></span>
