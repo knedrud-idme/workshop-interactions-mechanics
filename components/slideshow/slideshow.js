@@ -81,11 +81,16 @@ const Slideshow = ({images = [], imageURLs}) => {
                     {images.map((image, index) => {
                         const imageUrl = imageURLs ? LoadedImageUrl(imageURLs, image.src) : image.src
                         return (
-                            <div className={`slide fade ${currentSlideIndex === index ? 'active' : ''}`} key={index}>
-                                <div className="numbertext">{index + 1} / {images.length}</div>
-                                <img src={imageUrl} alt={image.alt} style={{width: "100%"}} />
-                                <div className="text">{image.caption}</div>
-                            </div>
+                            <figure
+                                className={`slide fade ${currentSlideIndex === index ? 'active' : ''}`}
+                                key={index}
+                                aria-describedby={`count-${index}`}
+                                aria-labelledby={`img-${index} caption-${index}`}
+                            >
+                                <p className="numbertext" id={`count-${index}`}>{index + 1} / {images.length}</p>
+                                <img src={imageUrl} alt={image.alt} style={{width: "100%"}} id={`img-${index}`}/>
+                                <figcaption className="text" id={`caption-${index}`}>{image.caption}</figcaption>
+                            </figure>
                         )
                     })}
 
