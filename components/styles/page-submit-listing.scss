@@ -26,5 +26,6 @@
     margin-bottom: 1em;
 }
 .page-submit-listing form [aria-invalid="true"] {
-    border-color: var(--color-accent-error);
+    border: 2px solid var(--color-accent-error);
+    outline-offset: 4px;
 }

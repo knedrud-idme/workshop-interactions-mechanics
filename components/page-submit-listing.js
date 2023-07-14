@@ -25,7 +25,14 @@ const SubmitListingPage = () => {
         event.preventDefault()
         setIsFormSubmitted(true)
 
-        setErrorAnnouncement('Required fields cannot be empty.')
+        const invalidInputs = event.target.querySelectorAll(':invalid')
+
+        if (invalidInputs.length) {
+            setErrorAnnouncement('Form has invalid fields.')
+            invalidInputs.item(0).focus()
+        } else {
+            setErrorAnnouncement('')
+        }
     }
 
     const changeHandler = (event) => {
@@ -91,9 +98,9 @@ const SubmitListingPage = () => {
                                     </div>
                                     <div className="form-field">
                                         <label htmlFor="ownership">
-                                            Can the public legally camp here? <span className="asterisk" abbr="required">*</span>
+                                            Can the public legally camp here?
                                         </label>
-                                        <input type="checkbox" id="ownership" name="ownership" value="Owned" required onChange={event => changeHandler(event)} aria-invalid={isInvalid("ownership")} />
+                                        <input type="checkbox" id="ownership" name="ownership" value="Owned" onChange={event => changeHandler(event)} aria-invalid={isInvalid("ownership")} />
                                     </div>
                                 </div>
                                 <div className="form-field">
